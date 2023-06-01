@@ -1,5 +1,4 @@
 from src.utils import get_info_hh, create_db, add_info_to_db
-from src.DBManager import DBManager
 from src.config import config
 
 
@@ -21,9 +20,6 @@ def main():
     data = get_info_hh(company_ids)  # получаем информацию с сайта hh.ru
     create_db(db_name, params)  # создает базу данных
     add_info_to_db(data, db_name, params)  # добавляем полученную информацию в базу данных
-    db_manager = DBManager(db_name, params)  # создаем экземпляр класса DBManager для работы с базой данных
-    for i in db_manager.get_companies_and_vacancies_count():
-        print(i)
 
 
 if __name__ == '__main__':
