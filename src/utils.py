@@ -36,11 +36,10 @@ def create_db(db_name: str, params: dict) -> None:
         with conn.cursor() as cur:
             cur.execute("create table employers("
                         "company_id serial primary key,"
-                        "company_name varchar(50)  not null,"
+                        "company_name varchar(100)  not null,"
                         "description  text,"
                         "link         varchar(100) not null,"
-                        "industry     varchar(50),"
-                        "area         varchar(30),"
+                        "area         varchar(50),"
                         "vacancies_url varchar(100) not null)")
             cur.execute("create table vacancies("
                         "vacancy_id serial primary key,"
@@ -66,12 +65,11 @@ def add_info_to_db(info: list[dict], db_name: str, params: dict) -> None:
     conn = psycopg2.connect(database=db_name, **params)
     with conn.cursor() as cur:
         for i in info:
-            cur.execute("insert into employers (company_name, description, link, industry, area, vacancies_url)"
-                        "values (%s, %s, %s, %s, %s, %s)"
+            cur.execute("insert into employers (company_name, description, link, area, vacancies_url)"
+                        "values (%s, %s, %s, %s, %s)"
                         "returning company_id",
                         (i['company'].get('name'), convert_string(i['company'].get('description')), i['company'].get('alternate_url'),
-                         i['company']['industries'][0].get('name'), i['company']['area'].get('name'),
-                         i['company'].get('vacancies_url')))
+                         i['company']['area'].get('name'), i['company'].get('vacancies_url')))
             company_id = cur.fetchone()[0]
             vacancy_data = i['vacancies']
             for vacancy in vacancy_data:
